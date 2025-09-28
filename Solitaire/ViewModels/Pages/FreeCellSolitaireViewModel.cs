@@ -84,14 +84,14 @@ public partial class FreeCellSolitaireViewModel : CardGameViewModel
         ResetGame();
 
         var playingCards = GetNewShuffledDeck();
-        
+
         using (var stock0 = Cell1.DelayNotifications())
         {
             stock0.AddRange(playingCards);
         }
-        
+
         await Task.Delay(600);
-        
+
         using (var stock0 = Cell1.DelayNotifications())
         {
             stock0.Clear();
@@ -148,33 +148,37 @@ public partial class FreeCellSolitaireViewModel : CardGameViewModel
     /// </summary>
     private async Task TryMoveAllCardsToAppropriateFoundations()
     {
-        //  Go through the top card in each tableau - keeping
-        //  track of whether we moved one.
-        if (Cell1.Count > 0 && TryMoveCardToAppropriateFoundation(Cell1.Last()))
-        {
-            await Task.Delay(75);
-        }
-        
-        if (Cell2.Count > 0 && TryMoveCardToAppropriateFoundation(Cell2.Last()))
-        {
-            await Task.Delay(75);
-        }
-        
-        if (Cell3.Count > 0 && TryMoveCardToAppropriateFoundation(Cell3.Last()))
-        {
-            await Task.Delay(75);
-        }
-        
-        if (Cell4.Count > 0 && TryMoveCardToAppropriateFoundation(Cell4.Last()))
-        {
-            await Task.Delay(75);
-        }
-        
         var keepTrying = true;
-        
+
         while (keepTrying)
         {
             var movedACard = false;
+            
+            //  Go through the top card in each tableau - keeping
+            //  track of whether we moved one.
+            if (Cell1.Count > 0 && TryMoveCardToAppropriateFoundation(Cell1.Last()))
+            {
+                await Task.Delay(75);
+                movedACard = true;
+            }
+
+            if (Cell2.Count > 0 && TryMoveCardToAppropriateFoundation(Cell2.Last()))
+            {
+                await Task.Delay(75);
+                movedACard = true;
+            }
+
+            if (Cell3.Count > 0 && TryMoveCardToAppropriateFoundation(Cell3.Last()))
+            {
+                await Task.Delay(75);
+                movedACard = true;
+            }
+
+            if (Cell4.Count > 0 && TryMoveCardToAppropriateFoundation(Cell4.Last()))
+            {
+                await Task.Delay(75);
+                movedACard = true;
+            }
             
             foreach (var tableau in _tableauSet)
             {
@@ -289,7 +293,7 @@ public partial class FreeCellSolitaireViewModel : CardGameViewModel
                 //  We can move to a foundation only if:
                 //  1. It is empty and we are an ace.
                 //  2. It is card SN and we are suit S and Number N+1
-                if (GetSuitForFoundations(to) == card.Suit && 
+                if (GetSuitForFoundations(to) == card.Suit &&
                     ((to.Count == 0 && card.Value == 0) || (to.Count > 0 && to.Last().Value == card.Value - 1)))
                 {
                     //  Move from waste to foundation.
@@ -334,7 +338,7 @@ public partial class FreeCellSolitaireViewModel : CardGameViewModel
                 //  We can move to a foundation only if:
                 //  1. It is empty and we are an ace.
                 //  2. It is card SN and we are suit S and Number N+1
-                if (GetSuitForFoundations(to) == card.Suit && 
+                if (GetSuitForFoundations(to) == card.Suit &&
                     ((to.Count == 0 && card.Value == 0) || (to.Count > 0 && to.Last().Value == card.Value - 1)))
                 {
                     //  Move from tableau to foundation.
@@ -478,5 +482,4 @@ public partial class FreeCellSolitaireViewModel : CardGameViewModel
     public BatchObservableCollection<PlayingCardViewModel> Cell3 { get; } = new();
 
     public BatchObservableCollection<PlayingCardViewModel> Cell4 { get; } = new();
-
 }
